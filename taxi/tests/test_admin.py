@@ -42,4 +42,3 @@ class AdminTestCase(TestCase):
         self.assertContains(response, "first_name")
         self.assertContains(response, "last_name")
         self.assertContains(response, "license_number")
-

@@ -1,16 +1,20 @@
-from traceback import format_exc
-
 from django.test import TestCase
 
-from taxi.forms import DriverCreationForm, DriverSearchForm, CarSearchForm, ManufacturerSearchForm
+from taxi.forms import (DriverCreationForm,
+                        DriverSearchForm,
+                        CarSearchForm,
+                        ManufacturerSearchForm)
 from taxi.models import Driver, Car, Manufacturer
 
 
 class DriverFormsTest(TestCase):
     def setUp(self):
-        Driver.objects.create(username="testuser1", license_number="AAA12345")
-        Driver.objects.create(username="testuser2", license_number="BBB12345")
-        Driver.objects.create(username="anotheruser", license_number="CCC12345")
+        Driver.objects.create(username="testuser1",
+                              license_number="AAA12345")
+        Driver.objects.create(username="testuser2",
+                              license_number="BBB12345")
+        Driver.objects.create(username="anotheruser",
+                              license_number="CCC12345")
 
     def test_creation_form_with_license_first_last_name_is_valid(self):
         form_data = {
@@ -41,14 +45,23 @@ class DriverFormsTest(TestCase):
         form_data = {"username": "test"}
         form = DriverSearchForm(data=form_data)
         self.assertTrue(form.is_valid())
-        filtered_drivers = Driver.objects.filter(username__icontains=form.cleaned_data["username"])
+        filtered_drivers = Driver.objects.filter(
+            username__icontains=form.cleaned_data["username"]
+        )
         self.assertEqual(filtered_drivers.count(), 2)
-        self.assertIn("testuser1", [driver.username for driver in filtered_drivers])
-        self.assertIn("testuser2", [driver.username for driver in filtered_drivers])
+        self.assertIn(
+            "testuser1",
+            [driver.username for driver in filtered_drivers])
+        self.assertIn(
+            "testuser2",
+            [driver.username for driver in filtered_drivers])
+
 
 class CarFormsTest(TestCase):
     def setUp(self):
-        manufacturer = Manufacturer.objects.create(name="testname", country="testcountry")
+        manufacturer = Manufacturer.objects.create(
+            name="testname",
+            country="testcountry")
         Car.objects.create(model="testmodel1", manufacturer=manufacturer)
         Car.objects.create(model="testmodel2", manufacturer=manufacturer)
         Car.objects.create(model="anothermodel", manufacturer=manufacturer)
@@ -69,7 +82,8 @@ class CarFormsTest(TestCase):
         form_data = {"model": "test"}
         form = CarSearchForm(data=form_data)
         self.assertTrue(form.is_valid())
-        filtered_cars = Car.objects.filter(model__icontains=form.cleaned_data["model"])
+        filtered_cars = Car.objects.filter(
+            model__icontains=form.cleaned_data["model"])
         self.assertEqual(filtered_cars.count(), 2)
         self.assertIn("testmodel1", [car.model for car in filtered_cars])
         self.assertIn("testmodel2", [car.model for car in filtered_cars])
@@ -97,7 +111,12 @@ class ManufacturerFormsTest(TestCase):
         form_data = {"name": "test"}
         form = ManufacturerSearchForm(data=form_data)
         self.assertTrue(form.is_valid())
-        filtered_manufacturers = Manufacturer.objects.filter(name__icontains=form.cleaned_data["name"])
+        filtered_manufacturers = Manufacturer.objects.filter(
+            name__icontains=form.cleaned_data["name"])
         self.assertEqual(filtered_manufacturers.count(), 2)
-        self.assertIn("testname1", [manufacturer.name for manufacturer in filtered_manufacturers])
-        self.assertIn("testname2", [manufacturer.name for manufacturer in filtered_manufacturers])
+        self.assertIn(
+            "testname1",
+            [manufacturer.name for manufacturer in filtered_manufacturers])
+        self.assertIn(
+            "testname2",
+            [manufacturer.name for manufacturer in filtered_manufacturers])
